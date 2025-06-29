@@ -5,14 +5,14 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-# Set page config
+# configuration de la page
 st.set_page_config(
     page_title="My Data Scraper App",
     page_icon="🚗",
     layout="wide"
 )
 
-# Initialize session state
+# Initialisation des données dans la session
 if 'vehicles_data' not in st.session_state:
     st.session_state['vehicles_data'] = None
 if 'motorcycle_data' not in st.session_state:
@@ -20,7 +20,7 @@ if 'motorcycle_data' not in st.session_state:
 if 'rentals_data' not in st.session_state:
     st.session_state['rentals_data'] = None
 
-# Sidebar
+# Sidebar configuration
 st.sidebar.header("Fonctionnalités supplémentaires")
 
 # Pages indexes
@@ -37,7 +37,7 @@ scraping_options = [
 ]
 selected_option = st.sidebar.selectbox("", scraping_options)
 
-# Main content
+# Contenu principal
 st.title("MY DATA SCRAPER APP")
 
 st.markdown("""
@@ -51,7 +51,7 @@ Cette application permet de scrapper des données de véhicules, motos et locati
 def create_download_link(df, filename):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download data as CSV</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Télécharger sous format CSV</a>'
     return href
 
 # Fonction de scrappage pour le site d'achats devéhicules
@@ -107,7 +107,6 @@ def scrape_vehicles_data(max_pages):
             st.error(f"Erreur lors du scraping de la page {p}: {e}")
             continue
         
-        # Add delay between requests to be respectful
         time.sleep(1)
     
     status_text.text('Scraping terminé!')
@@ -159,7 +158,6 @@ def scrape_motorcycle_data(max_pages):
             st.error(f"Erreur lors du scraping de la page {p}: {e}")
             continue
         
-        # Add delay between requests to be respectful
         time.sleep(1)
     
     status_text.text('Scraping terminé!')
@@ -209,7 +207,7 @@ def scrape_rentals_data(max_pages):
             st.error(f"Erreur lors du scraping de la page {p}: {e}")
             continue
         
-        # Add delay between requests to be respectful
+        
         time.sleep(1)
     
     status_text.text('Scraping terminé!')
@@ -248,9 +246,9 @@ with col1:
                     st.error("Fichier non trouvé. Assurez-vous d'avoir placé 'dakar-auto.csv' dans le dossier /data.")
 
             
-        elif selected_option == "Download scraped data":
+        elif selected_option == "Télécharger les données scrappées":
             if st.session_state['vehicles_data'] is not None and not st.session_state['vehicles_data'].empty:
-                st.subheader("Downloaded Vehicles Data")
+                st.subheader("Telechargement des données de véhicules")
                 st.dataframe(st.session_state['vehicles_data'], use_container_width=True)
                 st.markdown(create_download_link(st.session_state['vehicles_data'], "vehicles_data.csv"), unsafe_allow_html=True)
             else:
@@ -286,9 +284,9 @@ with col2:
                     st.error("Fichier non trouvé. Assurez-vous d’avoir placé 'dakar-auto-scooter.csv' dans le dossier /data.")
 
 
-        elif selected_option == "Download scraped data":
+        elif selected_option == "Télécharger les données scrappées":
             if st.session_state['motorcycle_data'] is not None and not st.session_state['motorcycle_data'].empty:
-                st.subheader("Downloaded Motorcycle Data")
+                st.subheader("Telechargement des données de moto")
                 st.dataframe(st.session_state['motorcycle_data'], use_container_width=True)
                 st.markdown(create_download_link(st.session_state['motorcycle_data'], "motorcycle_data.csv"), unsafe_allow_html=True)
             else:
@@ -303,7 +301,7 @@ with col3:
                 df_rentals = scrape_rentals_data(selected_pages)
             
             if not df_rentals.empty:
-                st.success(f"Successfully scraped {len(df_rentals)} rentals from {selected_pages} pages!")
+                st.success(f"Scraping réussi de {len(df_rentals)} locations depuis {selected_pages} pages !")
                 st.dataframe(df_rentals, use_container_width=True)
                 st.markdown(create_download_link(df_rentals, "rentals_data.csv"), unsafe_allow_html=True)
                 st.session_state['rentals_data'] = df_rentals
@@ -324,9 +322,9 @@ with col3:
                     st.error("Fichier non trouvé. Assurez-vous d’avoir placé 'dakar-auto-location.csv' dans le dossier /data.")
 
 
-        elif selected_option == "Download scraped data":
+        elif selected_option == "Télécharger les données scrappées":
             if st.session_state['rentals_data'] is not None and not st.session_state['rentals_data'].empty:
-                st.subheader("Downloaded Rentals Data")
+                st.subheader("Telechargement des données de location")
                 st.dataframe(st.session_state['rentals_data'], use_container_width=True)
                 st.markdown(create_download_link(st.session_state['rentals_data'], "rentals_data.csv"), unsafe_allow_html=True)
             else:
